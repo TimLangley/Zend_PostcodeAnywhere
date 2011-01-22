@@ -19,6 +19,8 @@ class PostcodeAnywhere_CustomerProfiling_InteractiveTest
 {
     const TEST_RESPONSE = '[{"AcornType":"7","AcornTypeName":"Old people, detached homes","AcornGroup":"B","AcornGroupName":"Affluent Greys","AcornCategory":"1","AcornCategoryName":"Wealthy Achievers"}]';
 
+    const TEST_ERROR_RESPONSE = '[{"Error": "1", "Description":"test","Cause":"test","Resolution":"test"}]';
+
     /**
      * Tests the constructor method.
      *
@@ -79,6 +81,22 @@ class PostcodeAnywhere_CustomerProfiling_InteractiveTest
         $this->assertEquals($ret->getGroupName(), 'Affluent Greys');
         $this->assertEquals($ret->getCategory(), 1);
         $this->assertEquals($ret->getCategoryName(), 'Wealthy Achievers');
+
+        $response = new Zend_Http_Response(200, array(), self::TEST_ERROR_RESPONSE);
+        $adapter->setResponse($response);
+
+        $caught = false;
+
+        try {
+            $api->retrieveByPostcode('FOOBAR');
+        } catch (PostcodeAnywhere_CustomerProfiling_Interactive_Exception $e) {
+
+            $this->assertEquals('1 - test - test - test', $e->getMessage());
+
+            $caught = true;
+        }
+
+        $this->assertTrue($caught, 'The exception didn\'t rise.');
     }
 
 }
