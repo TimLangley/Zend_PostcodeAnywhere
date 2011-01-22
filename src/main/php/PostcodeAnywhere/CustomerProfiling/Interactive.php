@@ -18,7 +18,8 @@
  * Library class to interact with PostcodeAnywhere's customer profiling
  * interactive API.
  */
-class PostcodeAnywhere_CustomerProfiling_Interactive {
+class PostcodeAnywhere_CustomerProfiling_Interactive
+{
 
     private $_apiKey;
 
@@ -61,9 +62,7 @@ class PostcodeAnywhere_CustomerProfiling_Interactive {
 
         $this->_apiKey = $apiKey;
 
-        if (is_null($client)) {
-            $this->_client = new Zend_Http_Client();
-        }
+        $this->_client = $client ? $client : new Zend_Http_Client();
 
     }
 
@@ -73,7 +72,7 @@ class PostcodeAnywhere_CustomerProfiling_Interactive {
      * @param string $postcode The postcode.
      * @see http://www.postcodeanywhere.co.uk/support/webservices/CustomerProfiling/Interactive/RetrieveByPostcode/v1/default.aspx
      *
-     * @return mixed The API call result.
+     * @return PostcodeAnywhere_CustomerProfiling_ACORN The ACORN record.
      */
     public function retrieveByPostcode($postcode)
     {
